@@ -27,9 +27,9 @@ class Person(models.Model):
 
 
 class Quorum(models.Model):
+    uuid = UUIDField(primary_key=True)
     person = models.ForeignKey('Person')
-    uuid = UUIDField(unique=True)
-    lunch = models.IntegerField(choices=[(0,'n/a'), (1,'yes'), (2,'no')], default=0)
+    lunch = models.CharField('Almuerza hoy?', max_length=5, choices=[('n/a','n/a'), ('yes','yes'), ('no','no')], default='n/a')
 
     class Meta:
         verbose_name = 'Quorum'

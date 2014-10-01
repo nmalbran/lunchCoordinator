@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% for q in quorum_list %}
+
+        <ul>
+            <li>{{q.person.name}}: {{q.lunch}}</li>
+        </ul>
+
+    {% endfor %}
+
+{% endblock content %}
