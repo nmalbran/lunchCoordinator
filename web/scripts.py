@@ -11,7 +11,8 @@ FROM_EMAIL = 'nicolas_malbran@mcafee.com'
 QUORUM_SUBJECT = "Almuerzas hoy?"
 QUORUM_MESSAGE = """Hola %(name)s:
 Almuerzas en la oficina hoy?
-Check In: %(url)s
+Si: %(url_y)s
+No: %(url_n)s
 Bye!
 """
 
@@ -32,9 +33,9 @@ def check_quorum():
 
         data = {
             'name': p.name,
-            'url': BASE_URL + reverse('checkin', kwargs={'pk': q.uuid}),
+            'url_y': BASE_URL + reverse('rsvp', kwargs={'pk': q.uuid, 'rsvp': 1}),
+            'url_n': BASE_URL + reverse('rsvp', kwargs={'pk': q.uuid, 'rsvp': 0}),
         }
-        print data['url']
         m = (QUORUM_SUBJECT, QUORUM_MESSAGE % data, FROM_EMAIL, [p.mail])
 
         messages.append(m)

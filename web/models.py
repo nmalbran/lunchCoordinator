@@ -34,6 +34,7 @@ class Quorum(models.Model):
     class Meta:
         verbose_name = 'Quorum'
         verbose_name_plural = 'Quorums'
+        ordering = ['-lunch']
 
     def __unicode__(self):
         return self.person.name

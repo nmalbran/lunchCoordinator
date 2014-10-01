@@ -3,11 +3,19 @@
 {% block content %}
 
     <h3>Quorum</h3>
-
     {% for q in quorum_list %}
 
         <ul>
             <li>{{q.person.name}}: {{q.lunch}}</li>
+        </ul>
+
+    {% endfor %}
+
+    <h3>Places</h3>
+    {% for p in places %}
+
+        <ul>
+            <li>{{p.name}}</li>
         </ul>
 
     {% endfor %}
