@@ -3,7 +3,7 @@ from django_extensions.db.fields import UUIDField
 
 class Place(models.Model):
     name = models.CharField(max_length=100)
-    info = models.TextField()
+    info = models.TextField(blank=True)
 
     class Meta:
         verbose_name = 'Place'
