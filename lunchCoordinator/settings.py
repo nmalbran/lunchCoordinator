@@ -22,7 +22,7 @@ SECRET_KEY = 's^gplq*3fm-fgyt+^fckl)tbw3#gg3e6+dw_0^gcl&2b48zve1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
 
@@ -85,3 +85,5 @@ STATIC_URL = '/static/'
 
 EMAIL_HOST = 'localhost'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+BASE_URL = 'http://localhost:8000'
+DEFAULT_FROM_EMAIL = 'webmaster@localhost'

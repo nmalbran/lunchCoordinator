@@ -3,11 +3,8 @@ import random
 from web.models import Person, Quorum, Place
 from django.core.mail import send_mail, get_connection, EmailMultiAlternatives
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
-
-BASE_URL = 'http://localhost:8000'
-
-FROM_EMAIL = 'nicolas_malbran@mcafee.com'
 
 QUORUM_SUBJECT = "Almuerzas hoy?"
 QUORUM_MESSAGE = """Hola %(name)s:
@@ -27,9 +24,9 @@ Los lugares disponibles eran: %(valid_places)s.
 Nos vemos!
 """
 
-def _get_html_message():
+def _get_html_message(temp=''):
     here = os.path.abspath(os.path.dirname(__file__))
-    temp = 'templates/mail.html'
+    temp = 'templates/%s.html' % temp
     f = open(os.path.join(here,temp), 'r')
     msg = f.read()
     f.close()
@@ -44,12 +41,12 @@ def check_quorum():
 
         data = {
             'name': p.name,
-            'url_y': BASE_URL + reverse('rsvp', kwargs={'pk': q.uuid, 'rsvp': 1}),
-            'url_n': BASE_URL + reverse('rsvp', kwargs={'pk': q.uuid, 'rsvp': 0}),
+            'url_y': settings.BASE_URL + reverse('rsvp', kwargs={'pk': q.uuid, 'rsvp': 1}),
+            'url_n': settings.BASE_URL + reverse('rsvp', kwargs={'pk': q.uuid, 'rsvp': 0}),
         }
 
-        msg = EmailMultiAlternatives(QUORUM_SUBJECT, QUORUM_MESSAGE % data, FROM_EMAIL, [p.mail], connection=conn)
-        msg.attach_alternative(_get_html_message() % data, "text/html")
+        msg = EmailMultiAlternatives(QUORUM_SUBJECT, QUORUM_MESSAGE % data, settings.DEFAULT_FROM_EMAIL, [p.mail], connection=conn)
+        msg.attach_alternative(_get_html_message('quorum_mail') % data, "text/html")
 
         try:
             msg.send()
@@ -77,7 +74,7 @@ def notify_lunchers():
     }
 
     try:
-        send_mail(RESULT_SUBJECT, RESULT_MESSAGE % data, FROM_EMAIL, mail_list, fail_silently=False)
+        send_mail(RESULT_SUBJECT, RESULT_MESSAGE % data, settings.DEFAULT_FROM_EMAIL, mail_list, fail_silently=False)
     except Exception as e:
         print "Fail to send result mail."
         print e
