@@ -1,8 +1,9 @@
+import os
+import random
 from web.models import Person, Quorum, Place
-from django.core.mail import send_mail, send_mass_mail
+from django.core.mail import send_mail, get_connection, EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 
-import random
 
 BASE_URL = 'http://localhost:8000'
 
@@ -26,10 +27,18 @@ Los lugares disponibles eran: %(valid_places)s.
 Nos vemos!
 """
 
+def _get_html_message():
+    here = os.path.abspath(os.path.dirname(__file__))
+    temp = 'templates/mail.html'
+    f = open(os.path.join(here,temp), 'r')
+    msg = f.read()
+    f.close()
+    return msg
+
 def check_quorum():
     people = Person.objects.all()
     Quorum.objects.all().delete()
-    messages = []
+    conn = get_connection()
     for p in people:
         q = Quorum.objects.create(person=p)
 
@@ -38,16 +47,15 @@ def check_quorum():
             'url_y': BASE_URL + reverse('rsvp', kwargs={'pk': q.uuid, 'rsvp': 1}),
             'url_n': BASE_URL + reverse('rsvp', kwargs={'pk': q.uuid, 'rsvp': 0}),
         }
-        m = (QUORUM_SUBJECT, QUORUM_MESSAGE % data, FROM_EMAIL, [p.mail])
 
-        messages.append(m)
+        msg = EmailMultiAlternatives(QUORUM_SUBJECT, QUORUM_MESSAGE % data, FROM_EMAIL, [p.mail], connection=conn)
+        msg.attach_alternative(_get_html_message() % data, "text/html")
 
-    try:
-        send_mass_mail(tuple(messages), fail_silently=False)
-    except Exception as e:
-        print "Fail to send quorum mail."
-        print e
-
+        try:
+            msg.send()
+        except Exception as e:
+            print "Fail to send quorum mail to %s" % p.mail
+            print e
 
 def notify_lunchers():
     quorum = Quorum.objects.filter(lunch='yes')

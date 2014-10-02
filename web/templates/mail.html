@@ -1,0 +1,40 @@
+<html>
+<head>
+    <style>
+    a{
+        text-decoration: none;
+        font-size:2em;
+        font-weight:bold;
+        font-family:Arial;
+        color: white;
+    }
+    td{
+
+        padding: 0.5em;
+        margin: 0.3em;
+        border: 2px solid black;
+    }
+    .si{
+        background-color: #77F;
+        border: 2px solid #00F;
+    }
+    .no{
+        background-color: #F77;
+        border: 2px solid #F00;
+    }
+
+    </style>
+</head>
+<body>
+Hola <b>%(name)s</b>:<br/><br/>
+Almuerzas en la oficina hoy?<br/><br/>
+<table >
+    <tr>
+        <td class="si"><a href="%(url_y)s">SI</a></td>
+        <td class="no"><a href="%(url_n)s">NO</a></td>
+    </tr>
+</table>
+<br/><br/>
+Bye!
+</body>
+</html>
