@@ -8,6 +8,7 @@ class Place(models.Model):
     class Meta:
         verbose_name = 'Place'
         verbose_name_plural = 'Places'
+        ordering = ['name']
 
     def __unicode__(self):
         return self.name
@@ -21,6 +22,7 @@ class Person(models.Model):
     class Meta:
         verbose_name = 'Person'
         verbose_name_plural = 'People'
+        ordering = ['name']
 
     def __unicode__(self):
         return "%s (BL: %s)" % (self.name, self.blacklist)
@@ -41,7 +43,7 @@ class Quorum(models.Model):
     class Meta:
         verbose_name = 'Quorum'
         verbose_name_plural = 'Quorums'
-        ordering = ['-lunch']
+        ordering = ['-lunch', 'person']
 
     def __unicode__(self):
         return self.person.name
