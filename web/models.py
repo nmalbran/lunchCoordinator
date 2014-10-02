@@ -4,19 +4,25 @@ from django_extensions.db.fields import UUIDField
 class Place(models.Model):
     name = models.CharField(max_length=200, unique=True)
     info = models.TextField(blank=True)
+    active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Place'
         verbose_name_plural = 'Places'
-        ordering = ['name']
+        ordering = ['-active', 'name']
 
     def __unicode__(self):
         return self.name
+
+    @property
+    def blacklisted_by(self):
+        return ', '.join([p.person.name for p in self.blacklist_set.all()])
 
 
 class Person(models.Model):
     name = models.CharField(max_length=100, unique=True)
     mail = models.EmailField()
+    active = models.BooleanField(default=True)
 
 
     class Meta:
@@ -37,7 +43,7 @@ class Person(models.Model):
 
 class Quorum(models.Model):
     uuid = UUIDField(primary_key=True)
-    person = models.ForeignKey('Person')
+    person = models.ForeignKey('Person', unique=True)
     lunch = models.CharField('Almuerza hoy?', max_length=5, choices=[('n/a','n/a'), ('yes','yes'), ('no','no')], default='n/a')
 
     class Meta:

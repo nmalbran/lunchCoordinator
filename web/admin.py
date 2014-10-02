@@ -3,13 +3,16 @@ from web.models import *
 # Register your models here.
 
 
-admin.site.register(Place)
+class PlaceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'active', 'blacklisted_by')
+admin.site.register(Place, PlaceAdmin)
+
 
 class BlackListAdmin(admin.TabularInline):
     model = BlackList
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('name', 'mail', 'blacklist')
+    list_display = ('name', 'mail', 'blacklist', 'active')
     inlines = [BlackListAdmin]
 admin.site.register(Person, PersonAdmin)
 

@@ -12,12 +12,37 @@
     {% endfor %}
 
     <h3>Places</h3>
-    {% for p in places %}
 
-        <ul>
-            <li>{{p.name}}</li>
-        </ul>
+        <table>
+            <tr>
+                <th>Place</th>
+                <th>Blacklisted by</th>
+            </tr>
 
-    {% endfor %}
+        {% for p in places %}
+            <tr class="{% if not p.active %}off{% endif %}">
+                <td>{{p.name}}</td>
+                <td>{{p.blacklisted_by}}</td>
+            </tr>
+        {% endfor %}
+
+        </table>
 
 {% endblock content %}
+
+{% block css %}
+    table, th{
+        border: 2px solid black;
+        border-collapse: collapse;
+    }
+    tr{
+        margin: 0;
+    }
+    tr.off{
+        text-decoration: line-through;
+    }
+    td, th{
+        padding: .3em 1em;
+        border-right: 2px solid black;
+    }
+{% endblock css %}
