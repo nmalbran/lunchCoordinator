@@ -3,7 +3,6 @@ from django.views.generic import UpdateView, ListView, View
 from django.core.urlresolvers import reverse
 
 from web.models import Quorum, Place
-from web.forms import QuorumForm
 
 
 class CheckInView(UpdateView):
