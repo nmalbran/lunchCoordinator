@@ -21,6 +21,8 @@ RESULT_MESSAGE = """Holas,
 El lugar elegido es: %(place)s
 y los comensales son: %(names)s.
 
+Los lugares disponibles eran: %(valid_places)s.
+
 Nos vemos!
 """
 
@@ -52,12 +54,18 @@ def notify_lunchers():
     names = [q.person.name for q in quorum]
     mail_list = [q.person.mail for q in quorum]
 
-    places = Place.objects.all()
-    choice = random.choice([p.name for p in places])
+    all_places = Place.objects.all()
+    valid_places = set([p.name for p in all_places])
+
+    for q in quorum:
+        valid_places -= set(q.person.get_blacklist())
+
+    choice = random.choice(list(valid_places))
 
     data = {
         'place': choice,
         'names': ', '.join(names),
+        'valid_places': ', '.join(valid_places)
     }
 
     try:

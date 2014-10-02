@@ -2,7 +2,7 @@ from django.db import models
 from django_extensions.db.fields import UUIDField
 
 class Place(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=200, unique=True)
     info = models.TextField(blank=True)
 
     class Meta:
@@ -23,7 +23,14 @@ class Person(models.Model):
         verbose_name_plural = 'People'
 
     def __unicode__(self):
-        return self.name
+        return "%s (BL: %s)" % (self.name, self.blacklist)
+
+    def get_blacklist(self):
+        return [p.place.name for p in self.blacklist_set.all()]
+
+    @property
+    def blacklist(self):
+        return ', '.join(self.get_blacklist())
 
 
 class Quorum(models.Model):
@@ -38,3 +45,16 @@ class Quorum(models.Model):
 
     def __unicode__(self):
         return self.person.name
+
+
+class BlackList(models.Model):
+    person = models.ForeignKey('Person')
+    place = models.ForeignKey('Place')
+
+    class Meta:
+        verbose_name = 'BlackList'
+        verbose_name_plural = 'BlackLists'
+        unique_together = ('person', 'place')
+
+    def __unicode__(self):
+        return "%s:%s" % (self.person.name, self.place.name)
