@@ -4,7 +4,7 @@ from web.models import *
 
 
 class PlaceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'active', 'blacklisted_by')
+    list_display = ('name', 'visit_count', 'active', 'blacklisted_by')
 admin.site.register(Place, PlaceAdmin)
 
 

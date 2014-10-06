@@ -19,12 +19,14 @@
         <table>
             <tr>
                 <th>Place</th>
+                <th>Visit Count</th>
                 <th>Blacklisted by</th>
             </tr>
 
         {% for p in places %}
             <tr class="{% if not p.active %}off{% endif %}">
                 <td>{{p.name}}</td>
+                <td style='text-align:center'>{{p.visit_count}}</td>
                 <td>{{p.blacklisted_by}}</td>
             </tr>
         {% endfor %}

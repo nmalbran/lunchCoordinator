@@ -5,11 +5,12 @@ class Place(models.Model):
     name = models.CharField(max_length=200, unique=True)
     info = models.TextField(blank=True)
     active = models.BooleanField(default=True)
+    visit_count = models.IntegerField('Visit Count', default=0)
 
     class Meta:
         verbose_name = 'Place'
         verbose_name_plural = 'Places'
-        ordering = ['-active', 'name']
+        ordering = ['-active', '-visit_count', 'name']
 
     def __unicode__(self):
         return self.name
