@@ -2,16 +2,19 @@
 
 {% block content %}
 
-    <h3>Quorum</h3>
-    {% for q in quorum_list %}
+    <div class="fleft">
+        <h3>Quorum</h3>
+        {% for q in quorum_list %}
 
-        <ul>
-            <li>{{q.person.name}}: {{q.lunch}}</li>
-        </ul>
+            <ul>
+                <li>{{q.person.name}}: {{q.lunch}}</li>
+            </ul>
 
-    {% endfor %}
+        {% endfor %}
+    </div>
 
-    <h3>Places</h3>
+    <div class="fleft">
+        <h3>Places</h3>
 
         <table>
             <tr>
@@ -27,6 +30,7 @@
         {% endfor %}
 
         </table>
+    </div>
 
 {% endblock content %}
 
@@ -44,5 +48,10 @@
     td, th{
         padding: .3em 1em;
         border-right: 2px solid black;
+    }
+    div.fleft{
+        float: left;
+        width: 45%;
+        margin: 1%;
     }
 {% endblock css %}
