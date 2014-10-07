@@ -57,23 +57,36 @@ def check_quorum():
             print "Fail to send quorum mail to %s" % p.mail
             print e
 
+
+def select_place(blacklist=[]):
+    # get all places
+    all_places = Place.objects.filter(active=True)
+    # minus blacklisted ones
+    valid_places = list(set(all_places) - set(blacklist))
+    # order by visit count
+    valid_places.sort(key=lambda x:x.visit_count)
+    # select less visited
+    valid_places = valid_places[:5]
+
+    choice = random.choice(valid_places)
+    return (choice, valid_places)
+
+
 def notify_lunchers():
     quorum = Quorum.objects.filter(lunch='yes')
     names = [q.person.name for q in quorum]
     mail_list = [q.person.mail for q in quorum]
 
-    all_places = Place.objects.filter(active=True)
-    valid_places = set([p.name for p in all_places])
-
+    blacklist = []
     for q in quorum:
-        valid_places -= set(q.person.get_blacklist())
+        blacklist += [b.place for b in q.person.blacklist_set.all()]
 
-    choice = random.choice(list(valid_places))
+    choice, valid_places = select_place(blacklist)
 
     data = {
-        'place': choice,
+        'place': choice.name,
         'names': ', '.join(names),
-        'valid_places': ', '.join(valid_places)
+        'valid_places': ', '.join([p.name for p in valid_places])
     }
 
     try:
